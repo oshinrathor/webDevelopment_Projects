@@ -1,0 +1,105 @@
+<html>
+<html lang="en">
+    <head>
+        <style>
+            body{
+   background-image: linear-gradient(rgba(84, 235, 240, 0.801), rgba(245, 62, 163, 0.418)); 
+                }
+            font{
+                font-size: xx-large;font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande';
+            }
+            input{
+                width: 375px;
+            } 
+            button{
+                height: 50px; border-radius: 9px; background-color: rgb(220, 255, 149); font-weight: bold; font-size: medium; align-self: center;
+            }   
+        </style>
+        <script>
+            function validate()
+            {
+            var p1=document.getElementById("pass").value;
+            var p2=document.getElementById("cnfmpass").value;
+            var mnum=document.getElementById("phnnum").value;
+            if (p1!=p2) 
+            {
+              alert("CHECK THE PASSWORD YOU TYPED AGAIN IN BOTH THE GIVEN FIELDS.THEY MUST BE SAME.");
+              return false;
+            }
+            if (mnum.length!=10)
+            {
+                alert("INVALID MOBILE NUMBER");
+                return false;
+            }
+                return true;
+            }    
+        </script>
+    </head>
+<body>
+    <h1 style='text-align: center;'><u><b>STUDENT REGISTRATION FORM</b></u></h1>
+    <h3 style='text-align: center; color: blue; font-family: Lucida Sans;'><b>Fill out the form carefully for registration.</b></h3><br>
+    <h1 style="color: rgb(192, 20, 20);"><b><u>USER DETAILS</u></b></h1>
+        <table border="7" height="750">
+            <form method="post" onsubmit="return validate()">
+        <tr><th align="left">STUDENT NAME:</th><th><input name="name" type="text" required minlength="4" maxlength="18" placeholder="ENTER YOUR FULL NAME HERE"></th></tr>
+        <tr><th align="left">
+            <legend>GENDER:</legend></th><th>
+                MALE &ensp;&ensp;<input name="gender" type="radio"required><br>
+                FEMALE<input name="gender" type="radio"required>
+        </th></tr>
+        <tr><th align="left">COURSE NAME:</th><th><input name="course" type="text" required minlength="4" maxlength="18" placeholder="ENTER YOUR COURSE INFORMATION HERE"></th></tr>
+        <tr><th align="left">E-MAIL:</th><th><input name="e-mail" type="email" required placeholder="ENTER WORKING E-MAIL"></th></tr>
+        <tr><th align="left">DATE OF BIRTH:</th><th><input name="bday" type="date" required placeholder="DD-MM-YYYY"></th></tr>
+        <tr><th align="left">ADDRESS:</th><th><textarea cols="40" rows="5" required placeholder="ENTER RESIDENTIAL/PERMANENT ADDRESS"></textarea></th></tr>
+        <tr><th align="left">PINCODE:</th><th><input name="pincode" type="number" maxlength="6" placeholder="PINCODE"></th></tr>
+        <tr><th align="left">CITY:</th><th>
+            <select>
+                <option>--SELECT CITY FROM HERE--</option>
+                <option>JHANSI</option>
+                <option>BAREILLY</option>
+                <option>LUCKNOW</option>
+                <option>NEW DELHI</option>
+                <option>MUMBAI</option>
+                <option>KOLKATA</option>
+                <option>SHIMLA</option>
+                <option>BANGALORE</option>
+                <option>INDORE</option>
+                <option>PUNE</option>
+                <option>HYDERABAD</option>
+            </select></th></tr>
+            <tr><th align="left">STATE:</th><th>
+                <select>
+                    <option>--SELECT STATE FROM HERE--</option>
+                    <option>UTTAR PRADESH</option>
+                    <option>MADHYA PRADESH</option>
+                    <option>KERALA</option>
+                    <option>HIMACHAL PRADESH</option>
+                    <option>MAHARASHTRA</option>
+                    <option>WEST BENGAL</option>
+                    <option>KARNATAKA</option>
+                </select></th></tr>
+            <tr><th align="left">NATIONALITY:</th><th>
+                <select>
+                    <option>--SELECT COUNTRY FROM HERE--</option>
+                    <option>INDIAN</option>
+                    <option>RUSSIA</option>
+                    <option>MALAYSIA</option>
+                    <option>GERMANY</option>
+                    <option>CANADA</option>
+                    <option>AUSTRALIA</option>
+                    <option>UNITED STATES</option>
+                </select></th></tr>
+        <tr><th align="left">MOBILE NUMBER:</th><th><input name="mobnum" type="number" maxlength="10" id="phnnum" required placeholder="ENTER MOBILE NUMBER"></th></tr>
+        <tr><th align="left">PASSWORD:</th><th><input name="password" type="password" minlength="8" id="pass" required placeholder="PASSWORD"></th></tr>
+        <tr><th align="left">CONFIRM PASSWORD:</th><th><input name="cpassword" type="password" minlength="8" id="cnfmpass" required placeholder="ENTER YOUR DESIRED PASSWORD AGAIN"></th></tr>
+        <tr><th colspan="2"><hr color="08511d" size="5"></th></tr><br><br><br>
+        <tr><th colspan="2"><button type="submit" onclick="function validate()"><span></span>REGISTER NOW!</button>
+        <button type="reset"><span></span>RESET ALL</button></th></tr>
+        </form>
+        </table>     
+</body>
+</html>
+
+
+
+

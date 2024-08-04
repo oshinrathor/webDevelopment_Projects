@@ -1,0 +1,57 @@
+<html>
+<head>
+        <title>
+            Largest of 3 numbers
+        </title>
+        <style>
+            input{
+                color: black;
+                background-color: rgb(200, 220, 20);
+                box-shadow:10px 10px 5px rgb(220, 167, 20);
+                width: 200px;
+                border-radius: 10px;
+                font-size: larger;
+                margin: 200px;
+                margin-left: 650px;
+                padding: 30px;
+            }
+            h1{
+                text-align: center;
+                color: rgb(20, 157, 220);
+            }
+            img{
+                text-align: center;height: 330px;width: 330px;
+            }
+        </style>
+        <script>
+            function enterVal(){
+                var a=prompt("Enter First Number");
+                a=parseInt(a);
+                var b=prompt("Enter Second Number");
+                b=parseInt(b);
+                var c=prompt("Enter Third Number");
+                c=parseInt(c);
+                if(a>b & a>c){
+                    alert( a+"is greatest");
+                    
+                }
+                else if(b>c){
+                    alert(b+" is greatest");
+                    
+                }
+                else{
+                    alert(c+" is greatest");
+                    
+                }
+
+            }
+        </script>
+    </head>
+    <body background="https://th.bing.com/th/id/R.86b5a4f4e9040373e83526fd3c5eefe8?rik=USAqXkc5TpkJAA&riu=http%3a%2f%2fwww.pixelstalk.net%2fwp-content%2fuploads%2f2016%2f07%2fBlack-plain-desktop-background-wallpaper.jpg&ehk=T2i6yzgpvvXm4cMKkoTjRuGRZ7qOfv7k9%2b2YqGoD2ZM%3d&risl=&pid=ImgRaw&r=0">
+        <h1><u>Press the go button to find out the largest of three numbers</u></h1>
+        <input type="button" value="Go" onclick="enterVal()">
+        <center><img src="https://cdn0.iconfinder.com/data/icons/flaturici-set-5/512/click-512.png"></center>
+       
+        
+    </body>
+</html>
