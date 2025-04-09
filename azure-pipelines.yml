@@ -1,0 +1,40 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+
+# Step 1: Checkout code from the GitHub repository
+- task: Checkout@1
+  displayName: 'Checkout Code from GitHub'
+
+# Step 2: Run a basic validation or linter for the HTML, CSS, JS files (Optional but useful)
+- script: |
+    echo "Validating HTML, CSS, and JS files..."
+    # You can use a linter like 'htmlhint' or 'stylelint' to validate your code.
+    # For demonstration, we'll just echo out the files in the repo.
+    echo "Files in the repository:"
+    ls -al
+  displayName: 'Validate Code (Optional)'
+
+# Step 3: Package the code (this could just be zipping the files as a package)
+- script: |
+    echo "Packaging the project..."
+    # For simplicity, we are zipping the project directory as an artifact
+    tar -czf counter-project.tar.gz *
+  displayName: 'Package the Code'
+
+# Step 4: Publish the packaged code as an artifact (to be used in later stages or deployments)
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/counter-project.tar.gz'
+    artifactName: 'counter-artifact'
+    publishLocation: 'Container'
+  displayName: 'Publish Artifact'
