@@ -1,0 +1,38 @@
+# This pipeline will download the artifact and deploy it to your Azure VM
+trigger:
+  branches:
+    include:
+      - none  # Disable direct triggers (manual CD trigger after build completion)
+
+# Define the stages of the pipeline
+stages:
+  - stage: Deploy
+    displayName: 'Deploy to Azure VM'
+    jobs:
+      - job: FetchArtifactAndDeploy
+        displayName: 'Download Artifact and Deploy'
+        pool:
+          vmImage: 'ubuntu-latest'  # Using an Ubuntu VM image (can be replaced with others if needed)
+
+        steps:
+        # Step 1: Download the build artifact from Azure DevOps
+        - task: DownloadBuildArtifacts@0
+          displayName: 'Download Build Artifact'
+          inputs:
+            buildType: 'current'  # Fetch from the current pipeline's artifacts (or use specific build ID if needed)
+            downloadType: 'specific'
+            artifactName: 'counter-artifact'  # Name of the artifact from the CI pipeline
+            downloadPath: '$(Pipeline.Workspace)'  # Directory to download the artifact to
+
+        # Step 2: Deploy to Azure VM (Using SSH for Linux VM or PowerShell for Windows VM)
+        - task: SSH@0  # Use SSH for Linux-based VMs
+          displayName: 'Deploy to Azure Linux VM via SSH'
+          inputs:
+            sshEndpoint: 'oshin'  # Replace with the name of your service connection to Azure VM
+            runOptions: 'inline'  # Run deployment commands directly on the VM
+            inline: |
+              echo "Deploying artifact to Azure VM"
+              cd /home/your-user/your-deployment-directory  # Change to your VM directory
+              tar -xvzf $(Pipeline.Workspace)/counter-artifact/counter-project.tar.gz  # Extract the artifact
+              # You can add more deployment steps here (e.g., restart services, move files, etc.)
+              echo "Deployment completed successfully!"
