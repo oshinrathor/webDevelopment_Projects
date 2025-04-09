@@ -37,6 +37,6 @@ steps:
 - task: PublishBuildArtifacts@1  # This task publishes the artifact (the packaged code)
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)/counter-project.tar.gz'  # Correct path to the artifact
-    artifactName: 'counter-artifact'
-    publishLocation: 'Container'
+    artifactName: 'counter-artifact'  # The name of the artifact in Azure DevOps
+    publishLocation: 'Container'  # This means the artifact will be published to the Azure DevOps Artifact container
   displayName: 'Publish Artifact'
