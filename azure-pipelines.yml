@@ -25,16 +25,18 @@ steps:
     ls -al  # List all the files to ensure they are correct
   displayName: 'Validate Code (Optional)'
 
-# Step 4: Package the project into a tarball (archive)
+# Step 4: Package the project into a tarball (archive) and store it in the artifact staging directory
 - script: |
     echo "Packaging the project..."
-    tar -czf counter-project.tar.gz *
+    mkdir -p $(Build.ArtifactStagingDirectory)  # Create the artifact staging directory if not already created
+    tar -czf $(Build.ArtifactStagingDirectory)/counter-project.tar.gz *
+    echo "Project packaged into counter-project.tar.gz"
   displayName: 'Package the Code'
 
 # Step 5: Publish the packaged code as a build artifact
 - task: PublishBuildArtifacts@1  # This task publishes the artifact (the packaged code)
   inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)/counter-project.tar.gz'
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/counter-project.tar.gz'  # Correct path to the artifact
     artifactName: 'counter-artifact'
     publishLocation: 'Container'
   displayName: 'Publish Artifact'
