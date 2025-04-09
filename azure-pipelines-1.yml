@@ -1,38 +1,65 @@
-# This pipeline will download the artifact and deploy it to your Azure VM
 trigger:
-  branches:
-    include:
-      - none  # Disable direct triggers (manual CD trigger after build completion)
+- main  # Trigger the pipeline when changes are pushed to the 'main' branch
 
-# Define the stages of the pipeline
-stages:
-  - stage: Deploy
-    displayName: 'Deploy to Azure VM'
-    jobs:
-      - job: FetchArtifactAndDeploy
-        displayName: 'Download Artifact and Deploy'
-        pool:
-          vmImage: 'ubuntu-latest'  # Using an Ubuntu VM image (can be replaced with others if needed)
+# Use an Ubuntu image for the build agent
+pool:
+  vmImage: 'ubuntu-latest'
 
-        steps:
-        # Step 1: Download the build artifact from Azure DevOps
-        - task: DownloadBuildArtifacts@0
-          displayName: 'Download Build Artifact'
-          inputs:
-            buildType: 'current'  # Fetch from the current pipeline's artifacts (or use specific build ID if needed)
-            downloadType: 'specific'
-            artifactName: 'counter-artifact'  # Name of the artifact from the CI pipeline
-            downloadPath: '$(Pipeline.Workspace)'  # Directory to download the artifact to
+# Set up the steps for the pipeline
+steps:
 
-        # Step 2: Deploy to Azure VM (Using SSH for Linux VM or PowerShell for Windows VM)
-        - task: SSH@0  # Use SSH for Linux-based VMs
-          displayName: 'Deploy to Azure Linux VM via SSH'
-          inputs:
-            sshEndpoint: 'oshin'  # Replace with the name of your service connection to Azure VM
-            runOptions: 'inline'  # Run deployment commands directly on the VM
-            inline: |
-              echo "Deploying artifact to Azure VM"
-              cd /home/your-user/your-deployment-directory  # Change to your VM directory
-              tar -xvzf $(Pipeline.Workspace)/counter-artifact/counter-project.tar.gz  # Extract the artifact
-              # You can add more deployment steps here (e.g., restart services, move files, etc.)
-              echo "Deployment completed successfully!"
+# Step 1: Checkout the code from GitHub using the established service connection
+- checkout: self  # This tells Azure DevOps to fetch the code from the GitHub repository automatically
+
+# Step 2: Navigate to the correct directory ('counter') where the project is located
+- script: |
+    echo "Navigating to the project directory..."
+    cd counter
+    echo "Current directory:"
+    pwd
+  displayName: 'Navigate to the Project Directory'
+
+# Step 3: Validate HTML, CSS, and JS files (Optional)
+- script: |
+    echo "Validating HTML, CSS, and JS files..."
+    ls -al  # List all the files to ensure they are correct
+  displayName: 'Validate Code (Optional)'
+
+# Step 4: Package the project into a tarball (archive) and store it in the artifact staging directory
+- script: |
+    echo "Packaging the project..."
+    mkdir -p $(Build.ArtifactStagingDirectory)  # Create the artifact staging directory if not already created
+    tar -czf $(Build.ArtifactStagingDirectory)/counter-project.tar.gz *
+    echo "Project packaged into counter-project.tar.gz"
+  displayName: 'Package the Code'
+
+# Step 5: Publish the packaged code as a build artifact
+- task: PublishBuildArtifacts@1  # This task publishes the artifact (the packaged code)
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)/counter-project.tar.gz'  # Correct path to the artifact
+    artifactName: 'counter-artifact'  # The name of the artifact in Azure DevOps
+    publishLocation: 'Container'  # This means the artifact will be published to the Azure DevOps Artifact container
+  displayName: 'Publish Artifact'
+
+# Step 6: Use Azure CLI to deploy to the Azure VM or any other Azure resource
+- task: AzureCLI@2
+  displayName: 'Deploy to Azure VM using Azure CLI'
+  inputs:
+    azureSubscription: 'oshin'  # Replace with your service connection name
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "Logging in to Azure..."
+      az account show  # Show current subscription details to confirm login
+
+      echo "Deploying project to Azure VM..."
+
+      # Transfer the artifact to the Azure VM using Azure CLI
+      # Example: Using `az vm run-command` to copy files to the VM
+      az vm run-command invoke \
+        --resource-group oshin  # Replace with your resource group name
+        --name oshin  # Replace with your VM name
+        --command-id RunShellScript \
+        --scripts "mkdir -p /home/azureuser/counter && tar -xzf $(Build.ArtifactStagingDirectory)/counter-project.tar.gz -C /home/azureuser/counter"  # Extract the packaged code on the VM
+
+      echo "Deployment to VM successful"
